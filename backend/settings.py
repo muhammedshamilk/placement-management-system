@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'dashboard',
     'interviews',
     'jobs',
+    'django_filters',
     'students',
 ]
 
@@ -156,3 +157,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 CORS_ALLOW_ALL_ORIGINS = True
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
