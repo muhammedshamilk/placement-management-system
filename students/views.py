@@ -94,5 +94,6 @@ class StudentDeleteView(APIView):
                     "error":
                     "Student not found"
                 },
-                status=status.HTTP_404_NOT_FOUND
+                 status=status.HTTP_404_NOT_FOUND
             )
+
