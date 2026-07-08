@@ -1,5 +1,6 @@
 from django.db import models
 from companies.models import Company
+from datetime import date
 
 
 class Job(models.Model):
@@ -47,13 +48,14 @@ class Job(models.Model):
 
     skills_required = models.TextField()
 
-    deadline = models.DateField()
+    application_deadline = models.DateField()
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default='draft'
     )
+
 
     is_active = models.BooleanField(default=True)
 
