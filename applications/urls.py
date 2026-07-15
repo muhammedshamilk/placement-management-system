@@ -9,8 +9,18 @@ urlpatterns = [
     ),
 
     path(
+        "check/<int:job_id>/",
+        CheckApplicationView.as_view()
+    ),
+
+    path(
         'my-applications/',
         MyApplicationsView.as_view()
+    ),
+
+    path(
+        "job/<int:job_id>/",
+        JobApplicationListView.as_view()
     ),
 
     path(

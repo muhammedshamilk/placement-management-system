@@ -6,7 +6,10 @@ class IsAdminOrRecruiter(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated and
-            request.user.role in ['admin', 'recruiter']
+            request.user.role in [
+                "admin",
+                "recruiter",
+            ]
         )
 
 
@@ -15,5 +18,18 @@ class IsStudent(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated and
-            request.user.role == 'student'
+            request.user.role == "student"
+        )
+
+
+class IsAdminRecruiterOfficer(BasePermission):
+
+    def has_permission(self, request, view):
+        return (
+            request.user.is_authenticated and
+            request.user.role in [
+                "admin",
+                "recruiter",
+                "officer",
+            ]
         )

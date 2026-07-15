@@ -10,7 +10,9 @@ from jobs.models import Job
 from applications.models import Application
 from interviews.models import Interview
 from accounts.models import User
+from rest_framework import status
 
+from applications.serializers import ApplicationSerializer
 
 class AdminDashboardView(APIView):
 
@@ -55,7 +57,19 @@ class AdminDashboardView(APIView):
                 is_active=True
             ).count(),
 
+            # 👇 Add this
+            "pending_applications": Application.objects.filter(
+                status="pending",
+                is_active=True
+            ).count(),
+
             "total_interviews": Interview.objects.filter(
+                is_active=True
+            ).count(),
+
+            # 👇 Add this
+            "scheduled_interviews": Interview.objects.filter(
+                status="scheduled",
                 is_active=True
             ).count(),
 
@@ -72,7 +86,6 @@ class AdminDashboardView(APIView):
         }
 
         return Response(data)
-
 
 
 
@@ -119,6 +132,15 @@ class OfficerDashboardView(APIView):
                 is_active=True
             ).count(),
 
+            "pending_applications": Application.objects.filter(
+                status="pending",
+                is_active=True
+            ).count(),
+
+            "scheduled_interviews": Interview.objects.filter(
+                status="scheduled",
+                is_active=True
+            ).count(),
         }
 
         return Response(data)
@@ -131,7 +153,21 @@ class RecruiterDashboardView(APIView):
 
     def get(self, request):
 
-        company = Company.objects.get(user=request.user)
+        try:
+
+            company = Company.objects.get(
+                user=request.user,
+                is_active=True
+            )
+
+        except Company.DoesNotExist:
+
+            return Response(
+                {
+                    "error": "Company profile not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         jobs = Job.objects.filter(
             company=company,
@@ -151,7 +187,7 @@ class RecruiterDashboardView(APIView):
         data = {
 
             "company_name": company.company_name,
-
+            "logo": request.build_absolute_uri(company.logo.url) if company.logo else None,
             "jobs_posted": jobs.count(),
 
             "active_jobs": jobs.filter(
@@ -164,6 +200,14 @@ class RecruiterDashboardView(APIView):
 
             "applications_received": applications.count(),
 
+            "pending_applications": applications.filter(
+                status="pending"
+            ).count(),
+
+            "under_review": applications.filter(
+                status="under_review"
+            ).count(),
+
             "shortlisted_candidates": applications.filter(
                 status="shortlisted"
             ).count(),
@@ -175,6 +219,11 @@ class RecruiterDashboardView(APIView):
             "selected_candidates": applications.filter(
                 status="selected"
             ).count(),
+
+            "rejected_candidates": applications.filter(
+                status="rejected"
+            ).count(),
+
         }
 
         return Response(data)
@@ -223,3 +272,16 @@ class StudentDashboardView(APIView):
         }
 
         return Response(data)
+
+from rest_framework import generics
+
+class RecentApplicationsView(generics.ListAPIView):
+    serializer_class = ApplicationSerializer
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get_queryset(self):
+        return (
+            Application.objects
+                .filter(is_active=True)
+                .order_by("-created_at")[:5]
+         )

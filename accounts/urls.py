@@ -14,6 +14,9 @@ from .views import (
     UserDeleteView,
     RecruiterListView,
 )
+import os
+
+print("USING URL FILE:", os.path.abspath(__file__))
 
 print("ACCOUNTS URLS LOADED")
 
@@ -31,3 +34,4 @@ urlpatterns = [
 ]
 
 print("Loaded urlpatterns:", urlpatterns)
+

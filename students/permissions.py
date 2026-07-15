@@ -9,3 +9,23 @@ class IsAdminOrOfficer(BasePermission):
             request.user.is_authenticated and
             request.user.role in ['admin', 'officer']
         )
+
+
+class IsAdminOrOfficer(BasePermission):
+
+    def has_permission(self, request, view):
+
+        return (
+            request.user.is_authenticated and
+            request.user.role in ["admin", "officer"]
+        )
+
+
+class IsStudent(BasePermission):
+
+    def has_permission(self, request, view):
+
+        return (
+            request.user.is_authenticated and
+            request.user.role == "student"
+        )

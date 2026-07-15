@@ -10,10 +10,11 @@ class CompanySerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+
         model = Company
+
         fields = [
             "id",
-            "user",
             "username",
             "company_name",
             "industry",
@@ -25,6 +26,14 @@ class CompanySerializer(serializers.ModelSerializer):
             "recruiter_designation",
             "logo",
             "description",
+            "is_active",
+            "created_at",
+            "updated_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "username",
             "is_active",
             "created_at",
             "updated_at",

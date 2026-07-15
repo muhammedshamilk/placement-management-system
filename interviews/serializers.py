@@ -5,11 +5,89 @@ from .models import Interview
 
 class InterviewSerializer(serializers.ModelSerializer):
 
+    # IDs
+    student = serializers.IntegerField(
+        source="application.student.id",
+        read_only=True
+    )
+
+    job = serializers.IntegerField(
+        source="application.job.id",
+        read_only=True
+    )
+
+    # Student
+    student_name = serializers.CharField(
+        source="application.student.username",
+        read_only=True
+    )
+
+    student_email = serializers.EmailField(
+        source="application.student.email",
+        read_only=True
+    )
+
+    # Job
+    job_title = serializers.CharField(
+        source="application.job.title",
+        read_only=True
+    )
+
+    company_name = serializers.CharField(
+        source="application.job.company.company_name",
+        read_only=True
+    )
+
     class Meta:
+
         model = Interview
-        fields = "__all__"
+
+        fields = [
+
+            "id",
+
+            "application",
+
+            "student",
+            "job",
+
+            "student_name",
+            "student_email",
+
+            "job_title",
+            "company_name",
+
+            "interview_date",
+            "interview_time",
+            "interview_mode",
+            "interview_location",
+            "interviewer_name",
+
+            "notes",
+
+            "status",
+            "result",
+
+            "feedback",
+
+            "created_at",
+            "updated_at",
+            "is_active",
+        ]
 
         read_only_fields = [
+
+            "application",
+
+            "student",
+            "job",
+
+            "student_name",
+            "student_email",
+
+            "job_title",
+            "company_name",
+
             "created_at",
             "updated_at",
             "is_active",
@@ -19,22 +97,14 @@ class InterviewSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
-        application = attrs["application"]
+        interview_date = attrs.get("interview_date")
 
-        # Prevent duplicate interview
-        if Interview.objects.filter(
-            application=application,
-            is_active=True
-        ).exists():
+        if interview_date and interview_date < timezone.now().date():
 
             raise serializers.ValidationError({
-                "error": "Interview already scheduled for this application."
-            })
 
-        # Prevent past interview dates
-        if attrs["interview_date"] < timezone.now().date():
-            raise serializers.ValidationError({
                 "error": "Interview date cannot be in the past."
+
             })
 
         return attrs

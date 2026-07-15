@@ -5,7 +5,11 @@ from .views import (
     StudentListView,
     StudentDetailView,
     StudentUpdateView,
-    StudentDeleteView
+    StudentDeleteView,
+    MyProfileView,
+    MyProfileUpdateView,
+    RecruiterStudentProfileView
+
 )
 
 urlpatterns = [
@@ -20,10 +24,7 @@ urlpatterns = [
         StudentListView.as_view()
     ),
 
-    path(
-        '<int:pk>/',
-        StudentDetailView.as_view()
-    ),
+
 
     path(
         'update/<int:pk>/',
@@ -33,6 +34,26 @@ urlpatterns = [
     path(
         'delete/<int:pk>/',
         StudentDeleteView.as_view()
+    ),
+    path(
+        "my-profile/",
+        MyProfileView.as_view(),
+        name="my-profile"
+    ),
+
+    path(
+        "my-profile/update/",
+        MyProfileUpdateView.as_view(),
+        name="my-profile-update"
+    ),
+    path(
+        "recruiter/<int:pk>/",
+        RecruiterStudentProfileView.as_view()
+    ),
+
+    path(
+        "<int:pk>/",
+        StudentDetailView.as_view()
     ),
 
 ]

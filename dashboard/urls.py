@@ -6,4 +6,9 @@ urlpatterns = [
     path("officer/", OfficerDashboardView.as_view(), name="officer-dashboard"),
     path("recruiter/", RecruiterDashboardView.as_view(), name="recruiter-dashboard"),
     path("student/", StudentDashboardView.as_view(), name="student-dashboard"),
+    path(
+        "recent-applications/",
+        RecentApplicationsView.as_view(),
+        name="recent-applications",
+),
 ]

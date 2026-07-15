@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'jobs',
     'django_filters',
     'students',
+    'offers',
+    'notifications',
 ]
 
 MIDDLEWARE = [

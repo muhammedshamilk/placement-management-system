@@ -6,6 +6,15 @@ urlpatterns = [
     path('create/', CompanyCreateView.as_view()),
 
     path('', CompanyListView.as_view()),
+    path(
+        "my-company/",
+        MyCompanyView.as_view()
+    ),
+
+    path(
+        "my-company/update/",
+        MyCompanyUpdateView.as_view()
+    ),
 
     path('<int:pk>/', CompanyDetailView.as_view()),
 

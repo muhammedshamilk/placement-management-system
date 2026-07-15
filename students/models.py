@@ -37,17 +37,14 @@ class StudentProfile(models.Model):
 
     skills = models.TextField()
 
-    linkedin = models.URLField(
-        blank=True,
-        null=True
-    )
+    linkedin = models.CharField(max_length=255, blank=True, null=True)
 
-    github = models.URLField(
-        blank=True,
-        null=True
-    )
+    github = models.CharField(max_length=255, blank=True, null=True)
 
-    portfolio = models.URLField(
+    portfolio = models.CharField(max_length=255, blank=True, null=True)
+
+    profile_photo = models.ImageField(
+        upload_to="student_profiles/",
         blank=True,
         null=True
     )

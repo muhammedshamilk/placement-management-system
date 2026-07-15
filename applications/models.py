@@ -27,6 +27,12 @@ class Application(models.Model):
         related_name='applications'
     )
 
+    resume = models.FileField(
+        upload_to="application_resumes/",
+        blank=True,
+        null=True
+    )
+
     cover_letter = models.TextField(
         blank=True,
         null=True
@@ -35,17 +41,15 @@ class Application(models.Model):
     status = models.CharField(
         max_length=30,
         choices=STATUS_CHOICES,
-        default='applied'
+        default="applied"
     )
 
-    applied_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    applied_at = models.DateTimeField(auto_now_add=True)
 
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = ['student', 'job']
+        unique_together = ["student", "job"]
 
     def __str__(self):
         return f"{self.student.username} - {self.job.title}"
