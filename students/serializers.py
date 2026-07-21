@@ -3,6 +3,7 @@ from .models import StudentProfile
 
 
 class StudentProfileSerializer(serializers.ModelSerializer):
+    profile_completed = serializers.ReadOnlyField()
 
     username = serializers.CharField(
         source="user.username",
@@ -85,6 +86,8 @@ class StudentProfileSerializer(serializers.ModelSerializer):
             "profile_photo",
 
             "resume",
+
+            "profile_completed",
 
         ]
 

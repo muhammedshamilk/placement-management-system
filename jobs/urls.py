@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import *
-
+from .views import JobMatchView
 urlpatterns = [
 
     path(
@@ -27,4 +27,9 @@ urlpatterns = [
         'delete/<int:pk>/',
         JobDeleteView.as_view()
     ),
+path(
+    "<int:pk>/match/",
+    JobMatchView.as_view(),
+    name="job-match"
+),
 ]

@@ -1,7 +1,8 @@
 from rest_framework import generics, filters, serializers
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .models import Company
 from .serializers import CompanySerializer
 from .permissions import (
@@ -129,24 +130,46 @@ class CompanyDeleteView(generics.DestroyAPIView):
 # Recruiter - My Company
 # =========================
 
-class MyCompanyView(generics.RetrieveAPIView):
-
-    serializer_class = CompanySerializer
+class MyCompanyView(APIView):
 
     permission_classes = [
         IsAuthenticated,
         IsRecruiter
     ]
 
-    def get_object(self):
+    def get(self, request):
 
-        return get_object_or_404(
-            Company,
-            user=self.request.user,
-            is_active=True
+        company, created = Company.objects.get_or_create(
+
+            user=request.user,
+
+            defaults={
+
+                "company_name": "",
+
+                "industry": "",
+
+                "website": "",
+
+                "email": request.user.email,
+
+                "phone": "",
+
+                "address": "",
+
+                "recruiter_name": request.user.username,
+
+                "recruiter_designation": "",
+
+                "description": "",
+
+            }
+
         )
 
+        serializer = CompanySerializer(company)
 
+        return Response(serializer.data)
 # =========================
 # Recruiter - Update My Company
 # =========================

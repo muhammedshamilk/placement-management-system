@@ -13,6 +13,9 @@ from .views import (
     UserDetailView,
     UserDeleteView,
     RecruiterListView,
+    ForgotPasswordView,
+    VerifyOTPView,
+    ResetPasswordView
 )
 import os
 
@@ -31,6 +34,21 @@ urlpatterns = [
     path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
     path("users/delete/<int:pk>/", UserDeleteView.as_view(), name="user-delete"),
     path("recruiters/",RecruiterListView.as_view(),name="recruiter-list"),
+path(
+    "forgot-password/",
+    ForgotPasswordView.as_view(),
+    name="forgot-password"
+),
+path(
+    "verify-otp/",
+    VerifyOTPView.as_view(),
+    name="verify-otp"
+),
+path(
+    "reset-password/",
+    ResetPasswordView.as_view(),
+    name="reset-password",
+),
 ]
 
 print("Loaded urlpatterns:", urlpatterns)

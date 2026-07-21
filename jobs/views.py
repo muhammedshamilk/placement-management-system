@@ -1,6 +1,9 @@
 from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from students.models import StudentProfile
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from .models import Job
 from .serializers import JobSerializer
@@ -185,3 +188,83 @@ class JobDeleteView(generics.DestroyAPIView):
         instance.is_active = False
 
         instance.save()
+
+
+
+
+class JobMatchView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+
+        try:
+            student = StudentProfile.objects.get(
+                user=request.user,
+                is_active=True
+            )
+        except StudentProfile.DoesNotExist:
+            return Response(
+                {"error": "Student profile not found."},
+                status=404
+            )
+
+        try:
+            job = Job.objects.get(
+                pk=pk,
+                is_active=True
+            )
+        except Job.DoesNotExist:
+            return Response(
+                {"error": "Job not found."},
+                status=404
+            )
+
+        student_skills = [
+            skill.strip().lower()
+            for skill in (student.skills or "").split(",")
+            if skill.strip()
+        ]
+
+        job_skills = [
+            skill.strip().lower()
+            for skill in (job.skills_required or "").split(",")
+            if skill.strip()
+        ]
+
+        matched_skills = [
+            skill.title()
+            for skill in job_skills
+            if skill in student_skills
+        ]
+
+        missing_skills = [
+            skill.title()
+            for skill in job_skills
+            if skill not in student_skills
+        ]
+
+        total_skills = len(job_skills)
+
+        if total_skills == 0:
+            match_percentage = 0
+        else:
+            match_percentage = round(
+                (len(matched_skills) / total_skills) * 100
+            )
+
+        if match_percentage >= 90:
+            match_level = "Excellent Match"
+        elif match_percentage >= 70:
+            match_level = "Good Match"
+        elif match_percentage >= 50:
+            match_level = "Average Match"
+        else:
+            match_level = "Poor Match"
+
+        return Response({
+            "match_percentage": match_percentage,
+            "match_level": match_level,
+            "matched_skills": matched_skills,
+            "missing_skills": missing_skills,
+        })

@@ -155,9 +155,32 @@ class RecruiterDashboardView(APIView):
 
         try:
 
-            company = Company.objects.get(
+            company, created = Company.objects.get_or_create(
+
                 user=request.user,
-                is_active=True
+
+                defaults={
+
+                    "company_name": "",
+
+                    "industry": "",
+
+                    "website": "",
+
+                    "email": request.user.email,
+
+                    "phone": "",
+
+                    "address": "",
+
+                    "recruiter_name": request.user.username,
+
+                    "recruiter_designation": "",
+
+                    "description": "",
+
+                }
+
             )
 
         except Company.DoesNotExist:

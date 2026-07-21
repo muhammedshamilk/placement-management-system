@@ -105,7 +105,11 @@ class MyProfileView(APIView):
 
     def get(self, request):
 
+        print("===== MyProfileView Called =====")
+        print(request.user)
+
         try:
+
             profile = StudentProfile.objects.get(
                 user=request.user,
                 is_active=True
@@ -117,14 +121,14 @@ class MyProfileView(APIView):
 
         except StudentProfile.DoesNotExist:
 
+            print("PROFILE NOT FOUND")
+
             return Response(
                 {
                     "error": "Student profile not found"
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
-
-
 # Student Update Own Profile
 class MyProfileUpdateView(APIView):
 
